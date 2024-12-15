@@ -1,23 +1,59 @@
 provider "google" {
-  credentials = file("path-to-service-account-key.json")
-  project     = var.project_id
-  region      = var.region
+  project = "your-gcp-project-id"
+  region  = "us-central1"
 }
 
+# Pub/Sub Module
+module "pubsub" {
+  source = "./modules/pubsub"
+
+  topics = ["inventory-events", "payment-events", "order-updates"]
+
+  subscriptions = [
+    {
+      topic_name           = "inventory-events"
+      subscription_name    = "inventory-sub"
+      ack_deadline_seconds = 20
+    },
+    {
+      topic_name           = "payment-events"
+      subscription_name    = "payment-sub"
+      ack_deadline_seconds = 10
+    }
+  ]
+}
+
+# Redis Module
+module "redis" {
+  source        = "./modules/redis"
+  instance_name = "ecom-redis"
+  region        = "us-central1"
+  memory_size_gb = 2
+  tier          = "BASIC"
+}
+
+# Cloud SQL Module
 module "cloud_sql" {
-  source = "./modules/cloud-sql"
+  source        = "./modules/cloud_sql"
   instance_name = "ecom-db"
   database_name = "ecommerce"
   user          = "admin"
   password      = "admin123"
+  region        = "us-central1"
 }
 
-module "redis" {
-  source = "./modules/redis"
-  instance_name = "ecom-redis"
+output "pubsub_topics" {
+  value = module.pubsub.topic_names
 }
 
-module "pubsub" {
-  source = "./modules/pubsub"
-  topics = ["inventory-events", "payment-events"]
+output "pubsub_subscriptions" {
+  value = module.pubsub.subscription_names
+}
+
+output "redis_instance" {
+  value = module.redis.redis_instance_name
+}
+
+output "cloud_sql_connection" {
+  value = module.cloud_sql.cloud_sql_connection_name
 }

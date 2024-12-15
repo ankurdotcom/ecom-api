@@ -1,0 +1,24 @@
+version: "3.8"
+services:
+  inventory-service:
+    build: ./inventory-service
+    ports:
+      - "8081:8080"
+  payment-service:
+    build: ./payment-service
+    ports:
+      - "8082:8080"
+  search-service:
+    build: ./search-service
+    ports:
+      - "8083:8080"
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: ecommerce
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
