@@ -11,6 +11,7 @@ provider "google" {
   project = "ecom-api-github-ankurdotcom"
   region  = "us-central1"
   zone = "us-central1-a"
+  credentials = "keys.json"
 }
 
 # Pub/Sub Module

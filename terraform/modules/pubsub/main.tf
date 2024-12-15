@@ -14,9 +14,10 @@ resource "google_pubsub_subscription" "default" {
 }
 
 output "topic_names" {
-  value = google_pubsub_topic.default[*].name
+  value = values(google_pubsub_topic.default)[*].name
 }
 
 output "subscription_names" {
-  value = google_pubsub_subscription.default[*].name
+  value = values(google_pubsub_subscription.default)[*].name
 }
+
