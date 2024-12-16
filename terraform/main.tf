@@ -51,3 +51,17 @@ output "pubsub_topics" {
 output "pubsub_subscriptions" {
   value = module.pubsub.subscription_names
 }
+
+# Cloud SQL Module
+module "cloud_sql" {
+  source        = "./modules/cloud_sql"
+  instance_name = "ecom-db"
+  database_name = "ecommerce"
+  user          = "admin"
+  password      = "admin123"
+  region        = "us-central1"
+}
+
+output "cloud_sql_connection" {
+  value = module.cloud_sql.cloud_sql_connection_name
+}
