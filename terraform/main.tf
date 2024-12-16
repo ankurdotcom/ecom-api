@@ -26,3 +26,28 @@ module "redis" {
 output "redis_instance" {
   value = module.redis.redis_instance_name
 }
+
+# Pub/Sub Module
+module "pubsub" {
+  source = "./modules/pubsub"
+  topics = ["inventory-events", "payment-events", "order-updates"]
+  subscriptions = [
+    {
+      topic_name           = "inventory-events"
+      subscription_name    = "inventory-sub"
+      ack_deadline_seconds = 20
+    },
+    {
+      topic_name           = "payment-events"
+      subscription_name    = "payment-sub"
+      ack_deadline_seconds = 10
+    }
+  ]
+}
+
+output "pubsub_topics" {
+  value = module.pubsub.topic_names
+}
+output "pubsub_subscriptions" {
+  value = module.pubsub.subscription_names
+}
